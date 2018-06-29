@@ -38,5 +38,5 @@ transaction-logs
 secrets.yml
 .gradletasknamecache
 .sts4-cache
-data/**
-node.lock
+data/
+*.lock
