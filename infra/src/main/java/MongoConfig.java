@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 @ComponentScan(value = "com.gofluent.elasticsearch")
 public class MongoConfig {
-
     @Value("${spring.data.mongodb.host}")
     private String MONGODB_HOST;
 
@@ -27,5 +26,4 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate() throws Exception {
         return new MongoTemplate(mongo(), MONGO_DBNAME);
     }
-
 }

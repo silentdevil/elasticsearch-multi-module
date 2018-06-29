@@ -3,7 +3,6 @@ package com.gofluent.elasticsearch.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-//@org.springframework.data.mongodb.core.mapping.Document
 @Document(indexName = "searchobject", type = "searchobject")
 public class SearchObject {
 
