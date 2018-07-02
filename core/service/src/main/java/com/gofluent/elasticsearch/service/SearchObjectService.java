@@ -11,5 +11,5 @@ public interface SearchObjectService {
     List<SearchObject> getAll();
     void syncAllFromMongoDB();
     void migrateToDB();
-    void save(SearchObject searchObject);
+    void syncDataFromMongoDB(String data);
 }

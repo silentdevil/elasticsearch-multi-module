@@ -1,4 +1,5 @@
 
+import com.google.gson.Gson;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.context.annotation.Bean;
@@ -36,5 +37,10 @@ public class ElasticSearchConfig {
     @Bean
     public NodeBuilder nodeBuilder() {
         return new NodeBuilder();
+    }
+
+    @Bean
+    public Gson gson() {
+        return new Gson();
     }
 }

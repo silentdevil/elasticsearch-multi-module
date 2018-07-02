@@ -57,20 +57,9 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/syncallfromdb")
-    public ResponseEntity<String> syncAllFromDB() throws UnsupportedEncodingException {
+    public ResponseEntity<String> syncAllFromDB() {
         searchObjectService.syncAllFromMongoDB();
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping(value = "/save")
-    public ResponseEntity<String> save(@RequestParam Map<String, Object> jsonString) throws IOException {
-        SearchObject searchObject = new SearchObject();
-        searchObject.setId(jsonString.get("id") + "");
-        searchObject.setType(String.valueOf(jsonString.get("type")));
-        searchObject.setDisplay(String.valueOf(jsonString.get("display")));
-        searchObject.setKeyword(String.valueOf(jsonString.get("keyword")));
-        searchObject.setReturnId(String.valueOf(jsonString.get("returnid")));
-        searchObjectService.save(searchObject);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
 }

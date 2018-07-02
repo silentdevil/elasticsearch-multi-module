@@ -4,6 +4,7 @@ import com.gofluent.elasticsearch.model.SearchObject;
 import com.gofluent.elasticsearch.repository.SearchObjectMongoRepository;
 import com.gofluent.elasticsearch.repository.SearchObjectRepository;
 import com.gofluent.elasticsearch.service.SearchObjectService;
+import com.google.gson.Gson;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -17,10 +18,12 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SearchObjectServiceImpl implements SearchObjectService {
@@ -36,6 +39,9 @@ public class SearchObjectServiceImpl implements SearchObjectService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Autowired
+    Gson gson;
 
     @Override
     public Page<SearchObject> findByKeyword(String keyword, Pageable pageable) {
@@ -62,9 +68,21 @@ public class SearchObjectServiceImpl implements SearchObjectService {
         return searchObjects;
     }
 
-
     @Override
     @KafkaListener(topics="${elasticsearch.topic}")
+    public void syncDataFromMongoDB(String data) {
+        System.out.println(data);
+        Map<String, String> map = gson.fromJson(data, Map.class);
+        SearchObject searchObject = new SearchObject();
+        searchObject.setId(map.get("id"));
+        searchObject.setDisplay(map.get("display"));
+        searchObject.setKeyword(map.get("keyword"));
+        searchObject.setReturnId(map.get("returnid"));
+        searchObject.setType(map.get("type"));
+        searchObjectRepository.save(searchObject);
+    }
+
+    @Override
     public void syncAllFromMongoDB() {
         List<SearchObject> searchObjects = mongoTemplate.findAll(SearchObject.class);
         searchObjectRepository.save(searchObjects);
@@ -73,12 +91,6 @@ public class SearchObjectServiceImpl implements SearchObjectService {
     @Override
     public void migrateToDB() {
         searchObjectMongoRepository.save(searchObjectRepository.findAll());
-    }
-
-    @Override
-    @Transactional
-    public void save(SearchObject searchObject) {
-        searchObjectRepository.save(searchObject);
     }
 
     private QueryBuilder buildQueryWithKeyword(String keyword) {
