@@ -8,11 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/rest/")
@@ -61,5 +59,4 @@ public class SearchController {
         searchObjectService.syncAllFromMongoDB();
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
-
 }
